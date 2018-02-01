@@ -1,3 +1,4 @@
+# Python端的安装代码
 from distutils.core import setup, Extension
 
 MOD = 'spam'
