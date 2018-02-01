@@ -71,7 +71,7 @@
 
 这三个部分依次是：
 1. 包裹函数 \_great_function。这个函数用来将Python的输入参数转换为C的，并将C的输出参数转化为Python的。
-2. 导出表 GreatModuleMethos。他负责告诉Python，这个包（模块）中有哪些函数可供Python调用。导出表的名字可以随便起，每一项当中有4个参数：第一个是提供给Python环境的函数名称；第二个参数是包裹函数名称；第三个参数的含义是参数变长；第四个参数是一些说明性的字符串。注意：导出表总是以{NULL,NULL,0,NULL}结束
+2. 导出表 GreatModuleMethos。他负责告诉Python，这个包（模块）中有哪些函数可供Python调用。导出表的名字可以随便起，每一项当中有4个参数：第一个是提供给Python环境的函数名称；第二个参数是包裹函数名称；第三个参数的含义是参数变长（简单解释一下，这个参数通常用METH_VARARGS，然后包裹函数的输入参数必须用PyArg_ParseTuple来进行解析，再输入到原来最初我们定义的c函数当中）；第四个参数是一些说明性的字符串。注意：导出表总是以{NULL,NULL,0,NULL}结束
 3. 导出函数initgreat_module。这个名字不是任意取的，而是你的module名称添加前缀init。导出函数中，会将模块名称与导出表进行连接。
 
 所以，回到原来的那个spammodule.c文件中：对应的三个部分就是：
@@ -123,3 +123,41 @@
 		Py_INCREF(SpamError);
 		PyModule_AddObject(m, "error", SpamError);
 	}
+
+注意到这里多了一个错误处理的步骤，我们后续再说。
+此外，原本的c文件中有个main函数，似乎可以不要！
+
+### 第二步-编写一个安装py文件setup.py
+这一步分为两种方法，首先是已经验证通过的也即编写一个setup.py的方法：
+
+	from distutils.core import setup, Extension
+	MOD = 'spam'
+	setup(name=MOD, ext_modules=[Extension(MOD, sources=['spammodule.c'])])
+
+以上是setup.py中的全部内容，写好之后，在命令提示符CMD中（注意要用管理员模式运行CMD）按照如下步骤进行编译：
+1. 利用CD命令进入目标文件夹
+2. 输入如下命令
+	
+	python setup.py build
+
+即可编译完成，得到的.pyd文件就可以以文件名作为模块的名字在python中进行import调用
+
+## 可能出现问题的地方
+### CMD编译时报错：找不到vcvarsall.bat文件
+由于我使用了VS2017，当前的编译方法找不到这个文件，需要修改相关的.py文件的代码。
+修改文件：msvc9compiler.py
+由于我通过anaconda安装python，所以有多个地方都有这个文件，需要修改的是：
+C:\ProgramData\Anaconda2\Lib\distutils\msvc9compiler.py
+C:\Users\jiajun\AppData\Local\conda\conda\envs\Python27\Lib\distutils\msvc9compiler.py
+这个两个路径之一下面的文件（时间长了有点记不清是哪一个了，我的装在C盘所以是这个，不同的安装位置路径略有不同）
+
+修改函数：
+
+	find_vcvarsall
+
+修改内容：
+1. 注释所有内容
+2. 添加code来return当前vcvarsall.bat所在的完全路径，我的在：
+	
+	return r"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\Build\\vcvarsall.bat"
+
