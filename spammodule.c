@@ -1,5 +1,5 @@
 #include <Python.h>
-// 该程序参考自Python官方教程
+// 该程序参考自Python官方教程：https://docs.python.org/2/extending/extending.html#id5
 
 // Error Process
 static PyObject *SpamError;
