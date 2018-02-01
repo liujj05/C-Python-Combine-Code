@@ -9,9 +9,17 @@
 
 简而言之，最终需要的效果是，我们自己开发一个包，叫作spam
 
-'''
+'
 import spam
 status = spam.system("dir")
-'''
+'
 
 上例是官方教程中的例子。这个spam包中，只有一个函数叫system，作用是把输入的字符串作为CMD命令执行，将返回字符串写入status
+
+### 第一步-写一个spammodule.c的文件
+
+第一行是固定的：
+
+'#include <Python.h>'
+
+这个包含语句必须在最前面。
