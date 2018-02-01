@@ -147,8 +147,8 @@
 由于我使用了VS2017，当前的编译方法找不到这个文件，需要修改相关的.py文件的代码。
 修改文件：msvc9compiler.py
 由于我通过anaconda安装python，所以有多个地方都有这个文件，需要修改的是：
-C:\ProgramData\Anaconda2\Lib\distutils\msvc9compiler.py
-C:\Users\jiajun\AppData\Local\conda\conda\envs\Python27\Lib\distutils\msvc9compiler.py
+- C:\ProgramData\Anaconda2\Lib\distutils\msvc9compiler.py
+- C:\Users\jiajun\AppData\Local\conda\conda\envs\Python27\Lib\distutils\msvc9compiler.py
 这个两个路径之一下面的文件（时间长了有点记不清是哪一个了，我的装在C盘所以是这个，不同的安装位置路径略有不同）
 
 修改函数：
